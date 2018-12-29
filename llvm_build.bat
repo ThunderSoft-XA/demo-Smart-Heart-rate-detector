@@ -59,6 +59,8 @@ rem #set SOC_DRIVER_ACTIVITY=%PROJECT_PATH%\driver\activity
 rem #set SOC_DRIVER_IIC=%PROJECT_PATH%\driver\I2c
 set SOC_DRIVER_ADC=%PROJECT_PATH%\driver\adc
 set SOC_DRIVER_PLUSENSOR=%PROJECT_PATH%\driver\plusensor
+set SOC_DRIVER_TIMER=%PROJECT_PATH%\driver\timer
+set SOC_DRIVER_I2C=%PROJECT_PATH%\driver\i2c
 rem #set SOC_DRIVER_TEMPERATURE=%PROJECT_PATH%\driver\temperature
 
 
@@ -118,11 +120,19 @@ for %%x in (%SOC_DRIVER_ADC%\*.c) do (
  if errorlevel 1 (goto :eof)
 )
 for %%x in (%SOC_DRIVER_PLUSENSOR%\*.c) do (
-%COMPILER%  -c  %DAM_CPPFLAGS% %GAGENT_CPPFLAGS% %DAM_CFLAGS% %APP_CFLAGS% %DAM_INCPATHS% %GAGENT_INC% %SOC_DRIVER_PLUSENSOR% %%x 
+%COMPILER%  -c  %DAM_CPPFLAGS% %GAGENT_CPPFLAGS% %DAM_CFLAGS% %APP_CFLAGS% %DAM_INCPATHS% %GAGENT_INC% %SOC_DRIVER_PLUSENSOR% -I %SOC_DRIVER_I2C% %%x 
  if errorlevel 1 (goto :eof)
 )
 for %%x in (%SOC_DRIVER_GPIO%\*.c) do (
 %COMPILER%  -c  %DAM_CPPFLAGS% %GAGENT_CPPFLAGS% %DAM_CFLAGS% %APP_CFLAGS% %DAM_INCPATHS% %GAGENT_INC% %SOC_DRIVER_GPIO% %%x 
+ if errorlevel 1 (goto :eof)
+)
+for %%x in (%SOC_DRIVER_TIMER%\*.c) do (
+%COMPILER%  -c  %DAM_CPPFLAGS% %GAGENT_CPPFLAGS% %DAM_CFLAGS% %APP_CFLAGS% %DAM_INCPATHS% %GAGENT_INC% %SOC_DRIVER_TIMER% -I %SOC_DRIVER_GPIO% -I %SOC_DRIVER_PLUSENSOR% %%x 
+ if errorlevel 1 (goto :eof)
+)
+for %%x in (%SOC_DRIVER_I2C%\*.c) do (
+%COMPILER%  -c  %DAM_CPPFLAGS% %GAGENT_CPPFLAGS% %DAM_CFLAGS% %APP_CFLAGS% %DAM_INCPATHS% %GAGENT_INC% %SOC_DRIVER_I2C% %%x 
  if errorlevel 1 (goto :eof)
 )
 

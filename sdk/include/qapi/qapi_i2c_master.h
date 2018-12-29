@@ -529,21 +529,6 @@ int i2c_module_cb_manager(UINT cb_id, void *app_cb,
 									 UINT cb_param5, UINT cb_param6,
 									 UINT cb_param7, UINT cb_param8);
 									 
-int i2c_module_cb_manager(UINT cb_id, void *app_cb, 
-									 UINT cb_param1, UINT cb_param2, 
-									 UINT cb_param3, UINT cb_param4,
-									 UINT cb_param5, UINT cb_param6,
-									 UINT cb_param7, UINT cb_param8)
-{
-	qapi_I2CM_Transfer_CB_t CB_Function;
-	
-	if(cb_id == TXM_QAPI_I2C_NOTIFY_CALLBACK)
-	{
-		CB_Function = (qapi_I2CM_Transfer_CB_t) app_cb;
-		(CB_Function)(cb_param1, (void *) cb_param2);
-	}
-	return 0;
-}
 #else   // DEF_END
 
 #error "No QAPI flags defined"

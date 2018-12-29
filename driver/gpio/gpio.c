@@ -31,10 +31,14 @@ qapi_GPIO_ID_t gpio_id_tbl[PIN_E_GPIO_MAX];
 qapi_TLMM_Config_t tlmm_config[PIN_E_GPIO_MAX];
 	
 /* Modify this pin num which you want to test */
-MODULE_PIN_ENUM  led_pin_num_motion = PIN_E_GPIO_06;
-MODULE_PIN_ENUM  led_pin_num_Pulsesensor =  PIN_E_GPIO_07;
-MODULE_PIN_ENUM  led_pin_num_pressure = PIN_E_GPIO_08;
-MODULE_PIN_ENUM  motor_pin_num = PIN_E_GPIO_09;
+//MODULE_PIN_ENUM  led_pin_num_motion;
+//MODULE_PIN_ENUM  led_pin_num_Pulsesensor;
+//MODULE_PIN_ENUM  led_pin_num_pressure;
+//MODULE_PIN_ENUM  motor_pin_num ;
+
+MODULE_PIN_ENUM led_blue;		//data status
+MODULE_PIN_ENUM led_red;		//abnormal status
+MODULE_PIN_ENUM led_green;		//normal status
 
 /**************************************************************************
 *                                 FUNCTION
@@ -44,20 +48,51 @@ MODULE_PIN_ENUM  motor_pin_num = PIN_E_GPIO_09;
  gpio_config_init
  @brief
  */
- 
+
+
  void led_gpio_config()
  {
 	    gizLog(LOG_INFO,"in led_gpio_config...\n"); 
-	    
-	    //led_pin_num_motion = PIN_E_GPIO_06;		// motion led
-	    gpio_config(led_pin_num_motion, QAPI_GPIO_OUTPUT_E, QAPI_GPIO_NO_PULL_E, QAPI_GPIO_2MA_E);	
 	   
-	    //led_pin_num_Pulsesensor = PIN_E_GPIO_07;	//pulsensor led
-	    gpio_config(led_pin_num_Pulsesensor, QAPI_GPIO_OUTPUT_E, QAPI_GPIO_NO_PULL_E, QAPI_GPIO_2MA_E);	
-	   
-	    //led_pin_num_pressure = PIN_E_GPIO_08;	//pressure led
-	    gpio_config(led_pin_num_pressure, QAPI_GPIO_OUTPUT_E, QAPI_GPIO_NO_PULL_E, QAPI_GPIO_2MA_E);	
+	    led_blue = GPIO_BLUE;	//pulsensor led	D9
+	    gpio_config(led_blue, QAPI_GPIO_OUTPUT_E, QAPI_GPIO_NO_PULL_E, QAPI_GPIO_2MA_E);	
+		
+		led_red = GPIO_RED;		//pulsensor led	D2
+	    gpio_config(led_red, QAPI_GPIO_OUTPUT_E, QAPI_GPIO_NO_PULL_E, QAPI_GPIO_2MA_E);	
+		
+		led_green = GPIO_GREEN;	//pulsensor led	D3
+	    gpio_config(led_green, QAPI_GPIO_OUTPUT_E, QAPI_GPIO_NO_PULL_E, QAPI_GPIO_2MA_E);	
+		
  }
+
+ void led_on_off(bool on, uint8_t pin_gpio)
+ {
+	
+	if (on)
+	{
+		qapi_TLMM_Drive_Gpio(gpio_id_tbl[pin_gpio], gpio_map_tbl[pin_gpio].gpio_id, QAPI_GPIO_LOW_VALUE_E);
+	}
+	else
+	{
+		qapi_TLMM_Drive_Gpio(gpio_id_tbl[pin_gpio], gpio_map_tbl[pin_gpio].gpio_id, QAPI_GPIO_HIGH_VALUE_E);
+	}
+ }
+
+ #if 0
+ int int_gpio_read(void)
+ {
+	 qapi_GPIO_Value_t level = QAPI_GPIO_HIGH_VALUE_E;
+
+	 qapi_TLMM_Read_Gpio(gpio_id_tbl[PIN_E_GPIO], gpio_map_tbl[PIN_E_GPIO].gpio_id, &level);
+
+	 if (level == QAPI_GPIO_HIGH_VALUE_E)
+	 	return 1;
+	 else if (level == QAPI_GPIO_LOW_VALUE_E)
+	 	return 0;
+	 else
+	 	return -1;
+ }
+ #endif
 
 /*
  @func
@@ -65,15 +100,15 @@ MODULE_PIN_ENUM  motor_pin_num = PIN_E_GPIO_09;
  @brief
  */
 
+ #if 0
 void motor_gpio_config()
 {
 		 gizLog(LOG_INFO,"in motor_gpio_config ...\n"); 
 		 
-		 //motor_pin_num = PIN_E_GPIO_09;						// motor pin;
+		 motor_pin_num = PIN_E_GPIO_09;						// motor pin;
 	     gpio_config(motor_pin_num, QAPI_GPIO_OUTPUT_E, QAPI_GPIO_NO_PULL_E, QAPI_GPIO_2MA_E);	
 }
-
-
+#endif
 
 /*
 @func
@@ -91,17 +126,15 @@ void set_gpio_value(uint8_t gpiovalue, MODULE_PIN_ENUM m_pin)		//different pin (
 	qapi_Status_t status = QAPI_OK;
 	if(gpiovalue == 0x00)
 	{
-		while(i > 0)
+		while(i)
 		{
-			gizLog(LOG_INFO,"in while... i = %d\n", i);
 			status = qapi_TLMM_Drive_Gpio(gpio_id_tbl[m_pin], gpio_map_tbl[m_pin].gpio_id, QAPI_GPIO_LOW_VALUE_E);
-			//IOT_DEBUG("[GPIO] Set %d QAPI_GPIO_LOW_VALUE_E status = %d", g_test_pin_num, status);
 			gizLog(LOG_INFO,"set %d QAPI_GPIO_LOW_VALUE_E status = %d\n",m_pin, status);
-			qapi_Timer_Sleep(200, QAPI_TIMER_UNIT_MSEC, true);
+			qapi_Timer_Sleep(50, QAPI_TIMER_UNIT_MSEC, true);
 			
 			status = qapi_TLMM_Drive_Gpio(gpio_id_tbl[m_pin], gpio_map_tbl[m_pin].gpio_id, QAPI_GPIO_HIGH_VALUE_E);
 			gizLog(LOG_INFO,"set %d QAPI_GPIO_HIGH_VALUE_E status = %d\n",m_pin, status);
-			qapi_Timer_Sleep(200, QAPI_TIMER_UNIT_MSEC, true);
+			qapi_Timer_Sleep(50, QAPI_TIMER_UNIT_MSEC, true);
 			i--;
 		}
 	}
