@@ -8,11 +8,11 @@ Maintainer: Kou Zhiwu,JiangYuan,Wang Jie,Yan Shaohui,YangRong.
 
 Start date: December 17th, 2018
 
-Function description:
+Function Description:
 
 Use the pluseSensor to detect heart rate, when the heart rate value exceeds a certain threshold, led lights up.
 
-Document introduction:
+Document Introduction:
 
 ===> Gizwits: it mainly include Gizwits cloud protocol related files.
 
