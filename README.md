@@ -2,7 +2,7 @@
 
 Basic Information:
 
-A Demo of Qualcomm MDM9206 
+A Demo of Qualcomm MDM9206,for the promotion of Qualcomm technology. 
 
 Maintainer: Kou Zhiwu,JiangYuan,Wang Jie,Yan Shaohui,YangRong.
 
